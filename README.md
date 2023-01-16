@@ -40,6 +40,7 @@ Then, establish a connection via SSH and update/upgrade your system with `sudo a
 --> A more detailed guide can be found [here](https://www.crosstalksolutions.com/pivpn-wireguard-complete-setup-2022).
 1. Open port 51820 UDP on your router.
 2. Execute the automatic install script for piVPN with `sudo curl -L https://install.pivpn.io | bash` and go through the installation process.
+3. Since I've experienced cases where my VPN connection via WireGuard was a little unstable, I like to specify the MTU value that piVPN uses to match the MTU value of my router. In order to do that, execute `sudo ip link set dev wg0 mtu 1492` to set the MTU to 1492, for example. Find out if this worked out by having a look at `/etc/wireguard/wg0.conf` (enable root access beforehand via `sudu su`).
 3. Add users for the piVPN service with `pivpn -a`.
 4. Execute a quick debug, as this solves potential issues with not being able to connect to local devices `sudo pivpn -d`.
 5. Import the config files for said users either by either
