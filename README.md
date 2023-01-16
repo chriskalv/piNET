@@ -87,7 +87,7 @@ sudo python3 adafruit-pitft.py --display=35r --rotation=270 --install-type=conso
 # Update piHole at 04:05h every second day of the month
 5 4 2 * * pihole -up
 # Update PADD at 05:05 every second day of the month
-5 5 2 * * cd ~ && rm padd.sh && wget -N https://raw.githubusercontent.com/pi-hole/PADD/master/padd.sh && sudo chm>
+5 5 2 * * cd ~ && rm padd.sh && wget -N https://raw.githubusercontent.com/pi-hole/PADD/master/padd.sh && sudo chmod +x padd.sh
 
 # REBOOT
 # Reboot Raspberry Pi at 04:25h every third day of the month
