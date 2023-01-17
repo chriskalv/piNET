@@ -30,10 +30,10 @@ Then, establish a connection via SSH and update/upgrade your system with `sudo a
 1. Start the automatic install script for piHole with `sudo curl -sSL https://install.pi-hole.net | bash` and go through the installation process.
 2. Change the automatically generated password to access the web interface of the piHole with `pihole -a -p`.
 3. I like to limit the size of DNS packets to match the MTU size of my router. This is done by creating a file like `/etc/dnsmasq.d/99-edns.conf` and pasting the line `edns-packet-max=1492` (if the MTU size of your router is 1492) into it. After saving the file, restart DNS services with `pihole restartdns`.
-3. Set up your router to use the piHole's IP as its DNS server.
-4. Access the piHole's web interface within your browser by entering `<IP of your piHole>/admin` and configure the available settings to your liking.
-5. I also like to edit `/etc/pihole/pihole-FTL.conf` and include a 5 second delay to the startup process by adding `DELAY_STARTUP=5` to avoid occasional errors in the piHole dashboard saying that there is no eth0 device present. 
-6. Check if ads are being blocked in your pihole dashboard.
+5. Set up your router to use the piHole's IP as its DNS server.
+6. Access the piHole's web interface within your browser by entering `<IP of your piHole>/admin` and configure the available settings to your liking.
+7. I also like to edit `/etc/pihole/pihole-FTL.conf` and include a 5 second delay to the startup process by adding `DELAY_STARTUP=5` to avoid occasional errors in the piHole dashboard saying that there is no eth0 device present. 
+8. Check if ads are being blocked in your pihole dashboard.
   
 <br>
   
@@ -41,13 +41,23 @@ Then, establish a connection via SSH and update/upgrade your system with `sudo a
 --> A more detailed guide can be found [here](https://www.crosstalksolutions.com/pivpn-wireguard-complete-setup-2022).
 1. Open port 51820 UDP on your router.
 2. Execute the automatic install script for piVPN with `sudo curl -L https://install.pivpn.io | bash` and go through the installation process.
-3. Since I've experienced cases where my VPN connection via WireGuard was a little unstable, I like to specify the MTU value that piVPN uses to match the MTU value of my router. In order to do that, execute `sudo ip link set dev wg0 mtu 1492` to set the MTU to 1492, for example. Find out if this worked out by having a look at `/etc/wireguard/wg0.conf` (enable root access beforehand via `sudu su`).
-3. Add users for the piVPN service with `pivpn -a`.
-4. Execute a quick debug, as this solves potential issues with not being able to connect to local devices `sudo pivpn -d`.
-5. Import the config files for said users either by either
+3. In order for a VPN client to properly forward IPv4 packets, IPv4 forwarding needs to be enabled. This can be done by executing `sudo nano /etc/sysctl.conf` and uncommenting the line `net.ipv4.ip_forward=1`.
+4. Since I've experienced cases where my VPN connection via WireGuard was a little unstable, I like to specify the MTU value that piVPN uses to match the MTU value of my router. Also, the PostUp and PostDown configurations of iptables need to be defined. Both of these steps can be done by editing `/etc/wireguard/wg0.conf`. In order to do that, log in as root (`sudo su`) and execute `nano /etc/wireguard/wg0.conf` to edit the [Interface] section of the file:
+```python
+[Interface]
+PrivateKey = <PeerPrivateKey>
+Address = <PeerAddress>
+ListenPort = <YourListeningPort>
+MTU = 1492
+PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables ->
+PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables>
+``` 
+5. Add users for the piVPN service with `pivpn -a`.
+6. Execute a quick debug, as this solves potential issues with not being able to connect to local devices `sudo pivpn -d`.
+7. Import the config files for said users either by either
   + QR code with `pivpn -qr` for devices with integrated cameras, like cellphones or
   + Config file, which you can retrieve via SCP (with <b>WinSCP</b> or <b>FileZilla</b>, for example) from `/configs` on your Raspberry Pi.
-6. Connect to your piVPN from an external network and check if your IP changes with help of pages like [whatismyipaddress.com](https://whatismyipaddress.com/).
+8. Connect to your piVPN from an external network and check if your IP changes with help of pages like [whatismyipaddress.com](https://whatismyipaddress.com/).
 
 <br>
   
@@ -78,7 +88,7 @@ sudo python3 adafruit-pitft.py --display=35r --rotation=270 --install-type=conso
 + ### Establish recurring processes for backups, updates etc.
 1. Open crontab with `sudo crontab -e`.
 2. Add the following lines to the file (you can get some help with crontab time syntax with [crontab.guru](https://crontab.guru/)).
-```
+```yaml
 # BACKUPS
 # Back up piVPN at 04:05h every first day of the month
 5 4 1 * * pivpn -bk
