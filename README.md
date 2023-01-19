@@ -29,7 +29,7 @@ Then, establish a connection via SSH and update/upgrade your system with `sudo a
 --> A more detailed guide can be found [here](https://www.smarthomebeginner.com/pi-hole-setup-guide/).
 1. Start the automatic install script for piHole with `sudo curl -sSL https://install.pi-hole.net | bash` and go through the installation process.
 2. Change the automatically generated password to access the web interface of the piHole with `pihole -a -p`.
-3. I like to limit the size of DNS packets to match the MTU size of my router. This is done by creating a file like `/etc/dnsmasq.d/99-edns.conf` and pasting the line `edns-packet-max=1492` (if the MTU size of your router is 1492) into it. After saving the file, restart DNS services with `pihole restartdns`.
+3. I like to limit the size of DNS packets to match/undercut the MTU size of my router. This is done by creating a file like `/etc/dnsmasq.d/99-edns.conf` and pasting the line `edns-packet-max=1232` into it. Somehow, anything above that defaults to a packet size of over 4000 again, hence enter 1232. After saving the file, restart DNS services with `pihole restartdns`.
 5. Set up your router to use the piHole's IP as its DNS server.
 6. Access the piHole's web interface within your browser by entering `<IP of your piHole>/admin` and configure the available settings to your liking.
 7. I also like to edit `/etc/pihole/pihole-FTL.conf` and include a 5 second delay to the startup process by adding `DELAY_STARTUP=5` to avoid occasional errors in the piHole dashboard saying that there is no eth0 device present. 
