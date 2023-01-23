@@ -153,7 +153,7 @@ server{
   
 <br>
   
-+ ### Establish recurring processes for backups, updates etc.
++ ### Establish recurring processes for backups, updates, configurations etc.
 1. Open crontab with `sudo crontab -e`. Select `nano` to edit the file, if asked.
 2. Add the following lines to the file (you can get some help with crontab time syntax with [crontab.guru](https://crontab.guru/)).
 ```yaml
@@ -171,7 +171,7 @@ server{
 
 # REBOOT
 # Reboot Raspberry Pi at 04:25h every third day of the month
-5 4 2 * * /sbin/shutdown -r now
+5 4 3 * * /sbin/shutdown -r now
 
 # POWER SAVERS
 # Turn off PiTFT screen at 03:00h
