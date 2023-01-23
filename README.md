@@ -5,6 +5,17 @@ This is a guideline consisting of personal notes for the setup of a Raspberry Pi
   + an own Wireguard VPN server for remote access to the home network (via <b>piVPN</b>),
   + a device to encrypt DNS requests via HTTPS (via <b>Cloudflared</b>) for all clients on the network,
   + and a reverse proxy server to redirect specified domain requests to local IPs on specified ports (via <b>Nginx</b>).
+<br></br>
+
+| Finished piNet Device   |
+| :-------------: | 
+| [![](https://i.imgur.com/Vlfj5FX.jpg?raw=true)](https://i.imgur.com/Vlfj5FX.jpg)   | 
+
+| piNet (Front)   | piNet (Back)   |
+| ------------- | -------------|
+| [![](https://i.imgur.com/7YVQKyC.jpg?raw=true)](https://i.imgur.com/7YVQKyC.jpg)   |   [![](https://i.imgur.com/QLDGQQx.jpg?raw=true)](https://i.imgur.com/QLDGQQx.jpg)   |
+
+<br></br>
 
 ## Hardware
 + [Raspberry Pi 4](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/)
@@ -153,8 +164,8 @@ server{
 5 5 1 * * pihole -a -t
 
 # UPDATES
-# Update piHole at 04:05h every second day of the month
-5 4 2 * * pihole -up
+# Update piHole and change the standard port 80 of the WebUI back to custom port 8017 at 04:05h every second day of the month
+5 4 2 * * pihole -up && sed -ie 's/= 80/= 8017/g' /etc/lighttpd/lighttpd.conf
 # Update PADD at 05:05 every second day of the month
 5 5 2 * * cd ~ && rm padd.sh && wget -N https://raw.githubusercontent.com/pi-hole/PADD/master/padd.sh && sudo chmod +x padd.sh
 
