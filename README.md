@@ -1,4 +1,4 @@
-piNet Setup
+piNet
 ========================
 This is a guideline consisting of personal notes for the setup of a Raspberry Pi within a home network as 
   + an automatic adblocker (via <b>piHole</b>) that shows its current status on a nifty TFT display attached to the Raspberry Pi (via <b>PADD</b>),
