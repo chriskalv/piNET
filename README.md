@@ -229,8 +229,8 @@ You can always access the installer/configuration UI again with `sudo raspiBacku
 1. Open crontab with `sudo crontab -e`. Select `nano` to edit the file, if asked.
 2. Add the following lines to the file (you can get some help with crontab time syntax with [crontab.guru](https://crontab.guru/)).
 ```yaml
-# CONFIGvBACKUPS
-# Back up piHole config 04:15h every first day of the month:
+# CONFIG BACKUPS
+# Back up piHole config at 04:15h every first day of the month:
 15 4 1 * * pihole -a -t
 # Back up piVPN config at 04:30h every first day of the month:
 30 4 1 * * pivpn -bk
