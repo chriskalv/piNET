@@ -94,13 +94,14 @@ fi
 1. Open port 51820 UDP on your router for the Raspberry Pi.
 2. Execute the automatic install script for piVPN with `sudo curl -L https://install.pivpn.io | bash` and go through the installation process for the WireGuard VPN server. Reboot when finished.
 3. In order for a VPN client to properly forward IPv4 packets, IPv4 forwarding needs to be enabled. This can be done by executing `sudo nano /etc/sysctl.conf` and uncommenting the line `net.ipv4.ip_forward=1`.
-4. Since I've experienced cases where my VPN connection via WireGuard was a little unstable, I like to specify the MTU value that piVPN uses to match the MTU value of my router. Also, the PostUp and PostDown configurations of iptables need to be defined. Both of these steps can be done by editing `/etc/wireguard/wg0.conf`. In order to do that, log in as root (`sudo su`) and execute `nano /etc/wireguard/wg0.conf` to edit the [Interface] section of the file like so:
+4. Since I've experienced cases where my VPN connection via WireGuard was a little unstable, I like to specify the MTU value that piVPN uses to match the MTU value of my router and enable a persistent KeepAlive. Also, the PostUp and PostDown configurations of iptables need to be defined. Both of these steps can be done by editing `/etc/wireguard/wg0.conf`. In order to do that, log in as root (`sudo su`) and execute `nano /etc/wireguard/wg0.conf` to edit the [Interface] section of the file like so:
 ```python
 [Interface]
 PrivateKey = <PeerPrivateKey>
 Address = <PeerAddress>
 MTU = 1492
 ListenPort = <YourListeningPort>
+PersistentKeepalive = 25
 PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -A FORWARD -o wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -D FORWARD -o wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
 ``` 
