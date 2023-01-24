@@ -32,7 +32,7 @@ Of course, you can also use a Raspberry Pi 3 or even a Pi Zero with some (minor)
 
 <br>
 
-## Installation Process
+## Setup Process
 + ### Groundwork
 1. Install [Raspberry Pi OS Lite](https://www.raspberrypi.com/software/) by using the <b>Raspberry Pi Imager</b>. Since I have a Raspberry Pi 4, I install the 64bit version. With the imager software, you can directly set up your hostname (`piNet`), your user/password credentials, your SSH access and your timezone/keyboard settings before flashing the OS to the microSD card.<br>
 2. Once the Raspberry Pi has booted with the SD card inside, you check for the Pi’s IP address in your router’s web interface. There, you should also directly assign a static DHCP lease for it, so your new device always gets assigned the same IP from your router.
@@ -210,17 +210,19 @@ Security: sys
 ```
 3. SSH into your Raspberry Pi and install NFS Common to read from a NFS shared folder by executing `sudo apt-get install nfs-common`.
 4. Create a backup folder with `sudo mkdir /backup`.
-5. Enter `sudo nano /etc/fstab` and add the following lines to the file:
+5. Enter `sudo nano /etc/fstab` and add the following line to the file:
 ```
-# Raspberry Pi Backup to Synology NAS via NFS
 NAS_IP_ADDRESS:/PATH/TO/NAS /PATH/TO/MOUNT/POINT nfs auto 0 0
+```
+  In my specific case, this line is
+```
+192.168.2.8:/volume1/backups_LINUX /backup nfs auto 0 0
 ```
 6. Edit permissions accordingly by logging in as root with `sudo -i` and executing `chmod 777 /backup`. Then, make the Raspberry Pi's user ("pi" in my case) the owner of the new folder with `chown pi:pi /backup` and logout of the root user with `exit`.
 7. Install raspiBackup with `curl -L https://raspibackup.linux-tips-and-tricks.de/install | sudo bash` and configure everything according to your needs in the installer/configuration UI. Be sure to
 - select `rsync` as backup type and
-- stop recommended services before the backup process.<br>
-You can always access the installer/configuration UI again with `sudo raspiBackupInstallUI`.
-8. After that, you can initiate a first backup, if you wish to do so, with `sudo raspiBackup.sh -m detailed`.
+- stop recommended services before the backup process.
+8. After that, you can initiate a first backup with `sudo raspiBackup.sh -m detailed`. You can always access the installer/configuration UI again with `sudo raspiBackupInstallUI`.
 
 <br></br>
 
@@ -254,4 +256,4 @@ You can always access the installer/configuration UI again with `sudo raspiBacku
   
 <b></br>
 
-Congratulations! Your piNet device should now be all set up and ready.
+Congratulations! Your <b>piNet</b> device should now be all set up and ready!
