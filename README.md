@@ -195,7 +195,7 @@ server{
   
 <br>
   
-+ ### Install raspiBackup and establish a recurring backup process
++ ### Install raspiBackup
 --> [raspiBackup](https://github.com/framps/raspiBackup) will create a recurring backup of our miroSD to the Synology NAS on our network.
 1. Configure your Synology NAS to allow users access to the NFS protocol. In order to do that, log into DSM, go to <i>Control Panel</i> --> <i>File Services</i> --> <i>NFS</i> and activate <i>Enable NFS service</i>. Choose <i>NFS v4.1</i> as the "maximum NFS protocol".
 2. Create a new shared folder on your NAS. Right-click it and select <i>Edit</i>. In the <i>NFS Permissions</i> tab, click <i>Create</i> and enter the following:
