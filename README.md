@@ -6,7 +6,7 @@ This is a guideline consisting of personal notes for the setup of a Raspberry Pi
   + an uptime and response tracker for websites and/or clients on the network (via <b>Uptime Kuma</b>),
   + a reverse proxy server to redirect specified domain requests to local IPs on specified ports (via <b>Nginx</b>),
   + a device to encrypt all DNS requests for all clients on the network via HTTPS (via <b>Cloudflared</b>),
-  + and an automatic & recurring backup for your entire Raspberry Pi. (via <b>raspiBackup</b>).
+  + and an automatic & recurring backup for your entire Raspberry Pi (via <b>raspiBackup</b>).
 
 Needless to say, all of these applications/services can be installed on their own and none of them "requires" the other. However, the installation of the DoH service (<b>Cloudflared</b>) only makes sense in conjunction with the previous installation of <b>piHole</b> in this specific guide. <br>
 Furthermore, <b>raspiBackup</b> can be used to back up the microSD of your Raspberry Pi to all kinds of hosts and/or cloud services. In my guide, however, I will only describe the backup configuration to a Synology NAS.
