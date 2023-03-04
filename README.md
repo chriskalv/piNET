@@ -1,6 +1,6 @@
-piNet
+piNET
 ========================
-This is a guideline consisting of personal notes for the setup of a Raspberry Pi within a home network as 
+This is a guideline consisting of personal notes for the setup of a Raspberry Pi within a home network as a <b>Network Enhancement Tool</b> ("NET") with capabilities of
   + an automatic adblocker (via <b>piHole</b>) that optionally shows its current status on a nifty TFT display attached to the Raspberry Pi (via <b>PADD</b>),
   + an own Wireguard VPN server for remote access to the home network (via <b>piVPN</b>),
   + an uptime and response tracker for websites and/or clients on the network (via <b>Uptime Kuma</b>),
@@ -11,11 +11,11 @@ This is a guideline consisting of personal notes for the setup of a Raspberry Pi
 Needless to say, all of these applications/services can be installed on their own and none of them "requires" the other. However, the installation of the DoH service (<b>Cloudflared</b>) only makes sense in conjunction with the previous installation of <b>piHole</b> in this specific guide. <br>
 Furthermore, <b>raspiBackup</b> can be used to back up the microSD of your Raspberry Pi to all kinds of hosts and/or cloud services. In my guide, however, I will only describe the backup configuration to a Synology NAS.
 
-| Finished piNet Device   |
+| Finished piNET Device   |
 | :-------------: | 
 | [![](https://i.imgur.com/Vlfj5FX.jpg?raw=true)](https://i.imgur.com/Vlfj5FX.jpg)   | 
 
-| piNet (Front)   | piNet (Back)   |
+| piNET (Front)   | piNET (Back)   |
 | ------------- | -------------|
 | [![](https://i.imgur.com/7YVQKyC.jpg?raw=true)](https://i.imgur.com/7YVQKyC.jpg)   |   [![](https://i.imgur.com/QLDGQQx.jpg?raw=true)](https://i.imgur.com/QLDGQQx.jpg)   |
 
@@ -34,7 +34,7 @@ Of course, you can also use a Raspberry Pi 3 or even a Pi Zero with some (minor)
 
 ## Setup Process
 + ### Groundwork
-1. Install [Raspberry Pi OS Lite](https://www.raspberrypi.com/software/) by using the <b>Raspberry Pi Imager</b>. Since I have a Raspberry Pi 4, I install the 64bit version. With the imager software, you can directly set up your hostname (`piNet`), your user/password credentials, your SSH access and your timezone/keyboard settings before flashing the OS to the microSD card.<br>
+1. Install [Raspberry Pi OS Lite](https://www.raspberrypi.com/software/) by using the <b>Raspberry Pi Imager</b>. Since I have a Raspberry Pi 4, I install the 64bit version. With the imager software, you can directly set up your hostname (`piNET`), your user/password credentials, your SSH access and your timezone/keyboard settings before flashing the OS to the microSD card.<br>
 2. Once the Raspberry Pi has booted with the SD card inside, you check for the Pi’s IP address in your router’s web interface. There, you should also directly assign a static DHCP lease for it, so your new device always gets assigned the same IP from your router.
 3. You can then access the Pi via SSH (with software like <b>Putty</b>). Once you've logged in, define your local WLAN country via `sudo raspi-config` (<i>5</i> --> <i>L4</i> --> <i>Country</i>) and update/upgrade your system with `sudo apt-get update && sudo apt-get upgrade -y`. Ultimately, reboot with `sudo reboot`.
   
@@ -270,4 +270,4 @@ NAS_IP_ADDRESS:/PATH/TO/NAS /PATH/TO/MOUNT/POINT nfs auto 0 0
   
 <b></br>
 
-Congratulations! Your <b>piNet</b> device should now be all set up and ready!
+Congratulations! Your <b>piNET</b> device should now be all set up and ready!
