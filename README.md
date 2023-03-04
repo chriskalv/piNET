@@ -178,7 +178,7 @@ server{
 
 server{
         listen 80;
-        server_name uptimekuma.arpa;
+        server_name uptimekuma.arpa uptime.arpa;
 
         location / {
         proxy_pass http://<IP of your Raspberry Pi>:3001;
