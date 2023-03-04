@@ -211,7 +211,7 @@ server{
   
 + ### Install raspiBackup
 --> [raspiBackup](https://github.com/framps/raspiBackup) will create a recurring backup of our miroSD to the Synology NAS on our network.
-1. Configure your Synology NAS to allow users access to the NFS protocol. In order to do that, log into DSM, go to <i>Control Panel</i> --> <i>File Services</i> --> <i>NFS</i> and activate <i>Enable NFS service</i>. Choose <i>NFS v4.1</i> as the "maximum NFS protocol".
+1. Configure your Synology NAS to allow users access to the NFS protocol. In order to do that, log into DSM, go to <i>Control Panel</i> --> <i>File Services</i> --> <i>NFS</i> and activate <i>Enable NFS service</i>. Choose <i>NFS v3</i> as the "maximum NFS protocol".
 2. Create a new shared folder on your NAS. Right-click it and select <i>Edit</i>. In the <i>NFS Permissions</i> tab, click <i>Create</i> and enter the following:
 ```
 Hostname or IP: <IP of your Raspberry Pi>
@@ -226,11 +226,11 @@ Security: sys
 4. Create a backup folder with `sudo mkdir /backup`.
 5. Enter `sudo nano /etc/fstab` and add the following line to the file:
 ```
-NAS_IP_ADDRESS:/PATH/TO/NAS /PATH/TO/MOUNT/POINT nfs auto 0 0
+NAS_IP_ADDRESS:/PATH/TO/NAS /PATH/TO/MOUNT/POINT nfs rw,nfsvers=3 0 0
 ```
   In my specific case, this line is
 ```
-192.168.2.8:/volume1/backups_LINUX /backup nfs auto 0 0
+192.168.2.8:/volume1/backups_LINUX /backup nfs rw,nfsvers=3 0 0
 ```
 6. Edit permissions accordingly by logging in as root with `sudo -i` and executing `chmod 777 /backup`. Then, make the Raspberry Pi's user ("pi" in my case) the owner of the new folder with `chown pi:pi /backup` and logout of the root user with `exit`.
 7. Install raspiBackup with `curl -L https://raspibackup.linux-tips-and-tricks.de/install | sudo bash` and configure everything according to your needs in the installer/configuration UI. Be sure to
