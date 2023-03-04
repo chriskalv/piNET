@@ -235,7 +235,8 @@ NAS_IP_ADDRESS:/PATH/TO/NAS /PATH/TO/MOUNT/POINT nfs auto 0 0
 6. Edit permissions accordingly by logging in as root with `sudo -i` and executing `chmod 777 /backup`. Then, make the Raspberry Pi's user ("pi" in my case) the owner of the new folder with `chown pi:pi /backup` and logout of the root user with `exit`.
 7. Install raspiBackup with `curl -L https://raspibackup.linux-tips-and-tricks.de/install | sudo bash` and configure everything according to your needs in the installer/configuration UI. Be sure to
 - select `rsync` as backup type and
-- stop recommended services before the backup process.
+- stop recommended services before the backup process and
+- mount your /backup folder with `sudo mount /backup`.
 8. After that, you can initiate a first backup with `sudo raspiBackup.sh -m detailed`. You can always access the installer/configuration UI again with `sudo raspiBackupInstallUI`.
 
 <br></br>
