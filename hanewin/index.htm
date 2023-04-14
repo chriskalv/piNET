@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html class=" qawrbgenggr idc0_346"><head>
+ <meta http-equiv="content-type" content="text/html; charset=windows-1252">
+ <meta name="resource-type" content="document">
+ <meta name="author" content="Herbert Hanewinkel">
+ <meta name="keywords" content="OpenPGP, GnuPG, PGP, RSA, AES, Rijndael, public key encryption">
+ <meta name="keywords" content="PKI, Javascript, RFC 2440">
+ <meta name="keywords" content="mail encryption">
+ <title>Javascript PGP Encryption Service</title>
+
+<script language="Javascript" src="files/rsa.js" type="text/javascript"></script>
+<script language="Javascript" src="files/aes-enc.js" type="text/javascript"></script>
+<script language="Javascript" src="files/sha1.js" type="text/javascript"></script>
+<script language="Javascript" src="files/base64.js" type="text/javascript"></script>
+<script language="Javascript" src="files/pgpubkey.js" type="text/javascript"></script>
+<script language="Javascript" src="files/mouse.js" type="text/javascript"></script>
+<script language="Javascript" src="files/pgencode.js" type="text/javascript"></script>
+
+<script language="Javascript" type="text/javascript">
+
+var keytyp = -1;
+var keyid  = '';
+var pubkey = '';
+
+function getkey()
+{
+ var pu=new getPublicKey(document.s.pubkey.value);
+ if(pu.vers == -1) return;
+
+ document.s.vers.value=pu.vers;
+ document.s.user.value=pu.user;
+ document.s.keyid.value=pu.keyid;
+
+ pubkey = pu.pkey.replace(/\n/g,'');
+ document.s.pkey.value=pubkey;
+ document.s.pktype.value=pu.type;
+}
+
+function encrypt()
+{
+ keyid='0000000000000000';
+ if(document.s.keyid.value.length) keyid=document.s.keyid.value;
+ if(keyid.length != 16)
+ {
+   alert('Invalid Key Id');
+   return;
+ } 
+
+ keytyp = -1;
+ if(document.s.pktype.value == 'ELGAMAL') keytyp = 1;
+ if(document.s.pktype.value == 'RSA')     keytyp = 0;
+ if(keytyp == -1)
+ {
+   alert('Unsupported Key Type');
+   return;
+ } 
+
+ var startTime=new Date();
+
+ var text=document.t.text.value+'\r\n';
+ document.t.text.value=doEncrypt(keyid, keytyp, pubkey, text);
+
+ var endTime=new Date();
+ document.t.textSize.value=text.length;
+ document.t.howLong.value=(endTime.getTime()-startTime.getTime())/1000.0;
+}
+
+</script>
+</head>
+
+<body bgcolor="#d1d1d9">
+<h2 align="center">
+<font color="blue">Javascript PGP Encryption Service</font></h2>
+
+<p>
+<b><div align="center">This page encrypts a message with PGP using your browser's Javascript.</div></b>
+</p>
+<p></p>
+
+
+<hr align="center">
+
+<form name="s" action="javascript:getkey()">
+<table width="600" align="center">
+<tbody><tr><td>
+<textarea name="pubkey" rows="14" cols="90">Insert the ASCII armored PGP Public Key Block with the RSA or Elgamal
+public key of the receiver here (contents of exported *.asc file).
+</textarea>
+</td></tr>
+
+<tr><td>
+<input type="submit" value="Get Public Key Information">
+</td></tr>
+
+<tr><td>
+<table width="100%">
+<tbody><tr><td>
+</td></tr><tr><td><font size="-1" face="Verdana, Arial, Helvetica, sans-serif">
+Version:</font></td>
+<td align="right"><input size="40" name="vers" readonly="readonly"></td></tr>
+
+<tr><td><font size="-1" face="Verdana, Arial, Helvetica, sans-serif">
+User ID:</font></td>
+<td align="right"><input size="40" name="user" readonly="readonly"></td></tr>
+
+<tr><td><font size="-1" face="Verdana, Arial, Helvetica, sans-serif">
+Key ID (8 bytes in hex): </font></td>
+<td align="right"><input size="40" name="keyid" readonly="readonly"></td></tr>
+
+<tr><td><font size="-1" face="Verdana, Arial, Helvetica, sans-serif">
+Public Key type and values:</font></td>
+<td align="right"><input size="40" name="pktype" readonly="readonly"></td></tr>
+
+<tr><td colspan="2" align="right"><input size="100" name="pkey" readonly="readonly"></td></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+</form>
+
+<form name="t" action="javascript:encrypt()">
+<table width="600" align="center">
+<tbody><tr><td>
+<font size="-1" face="Verdana, Arial, Helvetica, sans-serif">
+The message is PGP encrypted using AES and RSA/Elgamal algorithms:
+</font>
+</td></tr>
+
+<tr><td>
+<textarea name="text" rows="16" cols="90">your text for PGP encryption goes here.
+</textarea></td></tr>
+
+<tr><td>
+<table width="100%">
+<tbody><tr><td align="left">
+<input type="submit" value="Encrypt Message"></td>
+<td align="right"><font size="-1" face="Verdana, Arial, Helvetica, sans-serif">
+<input size="8" name="textSize"> bytes. This took <input size="4" name="howLong"> seconds.</font>
+</td></tr>
+</tbody></table>
+</td></tr>
+
+<tr><td>
+<font size="-1" face="Verdana, Arial, Helvetica, sans-serif">
+Depending on processor speed, message size, public key size and public key type
+encryption in Javascript will need a few seconds. Please be patiented.
+</font>
+</td></tr>
+</tbody></table>
+</form>
+
+</body></html>
