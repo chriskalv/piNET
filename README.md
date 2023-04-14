@@ -4,6 +4,7 @@ This is a guideline consisting of personal notes for the setup of a Raspberry Pi
   + an automatic adblocker (via <b>piHole</b>) that optionally shows its current status on a nifty TFT display attached to the Raspberry Pi (via <b>PADD</b>),
   + an own Wireguard VPN server for remote access to the home network (via <b>piVPN</b>),
   + an uptime and response tracker for websites and/or clients on the network (via <b>Uptime Kuma</b>),
+  + a local website to encrypt text via PGP (via <b>Javascript PGP Encryption Service</b>),
   + a reverse proxy server to redirect specified domain requests to local IPs on specified ports (via <b>Nginx</b>),
   + a device to encrypt all DNS requests for all clients on the network via HTTPS (via <b>Cloudflared</b>),
   + and an automatic & recurring backup for your entire Raspberry Pi (via <b>raspiBackup</b>).
@@ -147,6 +148,26 @@ The last command will give you a command to execute, which will look like `sudo 
 
 <br>
 
++ ### Set up Javascript PGP Encryption Service
+--> [Javascript PGP Encryption service](https://www.hanewin.net/encrypt/pgcrypt.htm) enables us to encrypt text via PGP on a locally hosted website.
+1. We will need to transfer the files needed for the web service to our Raspberry Pi by use of `tcp asdf asdf /var/www/html/hanewin`
+2. Add the following lines to default of Nginx
+```
+server {
+        listen 80;
+        listen [::]:80;
+        root /var/www/html/hanewin;
+        index index.html index.htm;
+        server_name pgp.arpa;
+
+   location / {
+       try_files $uri $uri/ =404;
+   }
+}
+```
+
+<br>
+
 + ### Install Nginx
 --> We will use [Nginx](http://nginx.org/) as a reverse proxy, so we can enter a domain name in our browser and be redirected to a specific IP on a specific port.
 1. Install Nginx by executing `sudo apt install nginx`. After the installation, verify that Nginx is running with `sudo systemctl status nginx`.
@@ -254,9 +275,9 @@ NAS_IP_ADDRESS:/PATH/TO/NAS /PATH/TO/MOUNT/POINT nfs rw,nfsvers=3 0 0
 
 # APPLICATION UPDATES
 # Update piHole and change the standard port 80 of the WebUI back to custom port 8017 at 04:15h every second day of the month:
-15 4 2 * * pihole -up && sed -ie 's/= 80/= 8017/g' /etc/lighttpd/lighttpd.conf
+15 4 2 * * pihole -up && sudo sed -ie 's/= 80/= 8017/g' /etc/lighttpd/lighttpd.conf
 # Update PADD at 04:30 every second day of the month:
-30 4 2 * * cd ~ && rm padd.sh && wget -N https://raw.githubusercontent.com/pi-hole/PADD/master/padd.sh && sudo chmod +x padd.sh
+30 4 2 * * cd ~ && sudo rm padd.sh && wget -N https://raw.githubusercontent.com/pi-hole/PADD/master/padd.sh && sudo chmod +x padd.sh
 
 # REBOOTS
 # Reboot Raspberry Pi at 01:00h every third day of the month
