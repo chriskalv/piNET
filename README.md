@@ -4,12 +4,12 @@ This is a guideline consisting of personal notes for the setup of a Raspberry Pi
   + an automatic adblocker (via <b>piHole</b>) that optionally shows its current status on a nifty TFT display attached to the Raspberry Pi (via <b>PADD</b>),
   + an own Wireguard VPN server for remote access to the home network (via <b>piVPN</b>),
   + an uptime and response tracker for websites and/or clients on the network (via <b>Uptime Kuma</b>),
-  + a local website to encrypt text via PGP (via <b>Javascript PGP Encryption Service</b>),
+  + a local website to encrypt text via PGP (via <b>Javascript PGP Encryption Service</b> by Herbert Hanewinkel),
   + a reverse proxy server to redirect specified domain requests to local IPs on specified ports (via <b>Nginx</b>),
   + a device to encrypt all DNS requests for all clients on the network via HTTPS (via <b>Cloudflared</b>),
   + and an automatic & recurring backup for your entire Raspberry Pi (via <b>raspiBackup</b>).
 
-Needless to say, all of these applications/services can be installed on their own and none of them "requires" the other. However, the installation of the DoH service (<b>Cloudflared</b>) only makes sense in conjunction with the previous installation of <b>piHole</b> in this specific guide. <br>
+Needless to say, almost all of these applications/services can be installed on their own and none of them "requires" the other. However, hosting a local website (<b>PGP Encryption service</b>) obviously requires a web server (we use Nginx here, but it can be any other as well) and the installation of the DoH service (<b>Cloudflared</b>) only makes sense in conjunction with the previous installation of <b>piHole</b> in this specific guide. <br>
 Furthermore, <b>raspiBackup</b> can be used to back up the microSD of your Raspberry Pi to all kinds of hosts and/or cloud services. In my guide, however, I will only describe the backup configuration to a Synology NAS.
 
 | Finished piNET Device   |
@@ -148,26 +148,6 @@ The last command will give you a command to execute, which will look like `sudo 
 
 <br>
 
-+ ### Set up Javascript PGP Encryption Service
---> [Javascript PGP Encryption service](https://www.hanewin.net/encrypt/pgcrypt.htm) enables us to encrypt text via PGP on a locally hosted website.
-1. We will need to transfer the files needed for the web service to our Raspberry Pi by use of `tcp asdf asdf /var/www/html/hanewin`
-2. Add the following lines to default of Nginx
-```
-server {
-        listen 80;
-        listen [::]:80;
-        root /var/www/html/hanewin;
-        index index.html index.htm;
-        server_name pgp.arpa;
-
-   location / {
-       try_files $uri $uri/ =404;
-   }
-}
-```
-
-<br>
-
 + ### Install Nginx
 --> We will use [Nginx](http://nginx.org/) as a reverse proxy, so we can enter a domain name in our browser and be redirected to a specific IP on a specific port.
 1. Install Nginx by executing `sudo apt install nginx`. After the installation, verify that Nginx is running with `sudo systemctl status nginx`.
@@ -220,6 +200,35 @@ server{
 4. Restart Nginx with `sudo systemctl restart nginx`. Nginx is now running our new reverse proxy configuration.
 5. Next, we need to tell piHole (as it is our default DNS server) to redirect domain requests we would like to reverse proxy (in our example `pihole.arpa` and `uptimekuma.arpa`) to Nginx, so Nginx can redirect these requests instead. In order to do that, head to piHole's WebUI, go to <i>Local DNS</i> --> <i>DNS Records</i> and add new domain/IP combinations consisting of the domain we want to redirect (`pihole.arpa`, for example) and the IP of Nginx (which is the same IP as the Raspberry Pi's IP in our case). 
 7. Type in `pihole.arpa` or `uptimekuma.arpa` into your web browser, which should get you to each application's WebUI. You can create additional proxy redirects by adding them to `/etc/nginx/sites-available/default` and setting a Local DNS for them in piHole as well.
+
+<br>
+
++ ### Set up local PGP Encryption Service
+--> [Javascript PGP Encryption service](https://www.hanewin.net/encrypt/pgcrypt.htm) enables us to encrypt text via PGP on a locally hosted website.
+1. After having installed Nginx sucessfully in the previous step, we will need to transfer the files needed for the PGP web service from my GitHub repo to our Raspberry Pi and move it to Nginx' default folder for websites by executing the following commands:
+```
+cd ~
+sudo mkdir piNET && cd piNET
+sudo wget https://github.com/chriskalv/piNET/archive/refs/heads/main.zip
+sudo unzip main.zip
+sudo mv ~/piNET/piNET-main/hanewin /var/www/html/ && sudo rm -r ~/piNET
+```
+2. Then, add the following lines to Nginx' `sites-available` config after executing `sudo nano /etc/nginx/sites-available/default`:
+```php
+server {
+        listen 80;
+        listen [::]:80;
+        root /var/www/html/hanewin;
+        index index.html index.htm;
+        server_name pgp.arpa;
+
+   location / {
+       try_files $uri $uri/ =404;
+   }
+}
+```
+3. Restart nginx with `sudo systemctl restart nginx`.
+4. Now we can - again - tell piHole to redirect requests for our new desired PGP URL (in my case pgp.arpa), just as we did in the previous Nginx setup for piHole and Uptime Kuma.
 
 <br>
   
