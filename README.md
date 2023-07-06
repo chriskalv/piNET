@@ -284,7 +284,7 @@ NAS_IP_ADDRESS:/PATH/TO/NAS /PATH/TO/MOUNT/POINT nfs rw,nfsvers=3 0 0
 
 # APPLICATION UPDATES
 # Update piHole and change the standard port 80 of the WebUI back to custom port 8017 at 04:15h every second day of the month:
-15 4 2 * * pihole -up && sudo sed -ie 's/= 80/= 8017/g' /etc/lighttpd/lighttpd.conf
+15 4 2 * * pihole -up && sudo sed -ie 's/= 80 /= 8017/g' /etc/lighttpd/lighttpd.conf
 # Update PADD at 04:30 every second day of the month:
 30 4 2 * * cd ~ && sudo rm padd.sh && wget -N https://raw.githubusercontent.com/pi-hole/PADD/master/padd.sh && sudo chmod +x padd.sh
 
